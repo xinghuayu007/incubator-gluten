@@ -294,4 +294,14 @@ class ScalarFunctionsTest extends GlutenStreamingTestBase {
             "+I[1, 2024-12-31 12:12:12, 2024-12-31 20:12:12]",
             "+I[2, 2025-02-28 12:12:12, 2024-02-28 20:12:12]"));
   }
+
+  @Test
+  void testNot() {
+    List<Row> rows =
+        Arrays.asList(
+            Row.of(1, 1L, "2", true), Row.of(2, 2L, "2", false), Row.of(3, 3L, "2", true));
+    createSimpleBoundedValuesTable("tblLess", "a int, b bigint, c string, d boolean", rows);
+    String query = "select not d from tblLess";
+    runAndCheck(query, Arrays.asList("+I[false]", "+I[true]", "+I[false]"));
+  }
 }
